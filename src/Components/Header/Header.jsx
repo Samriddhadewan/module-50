@@ -1,8 +1,10 @@
+import { NavLink } from "react-router-dom"
 
 const Header = () => {
     const links = <>
-    <li><a>Submenu 1</a></li>
-    <li><a>Submenu 2</a></li>
+    <li><NavLink to='/'>home</NavLink></li>
+    <li><NavLink to='/login'>Login</NavLink></li>
+    <li><NavLink to='/register'>Register</NavLink></li>
     </>
 
 
