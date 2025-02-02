@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import auth from "../../firebase.config";
 import { useState } from "react";
 
@@ -15,16 +19,17 @@ const SignUp = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const terms = e.target.checkBox.checked;
-    console.log(email, password, terms);
+    const name = e.target.name.value;
+    const image = e.target.photo.value;
+    console.log(email, password, terms, name, image);
 
     setErrorMassage("");
     setSuccessMessage(false);
 
-    if(!terms){
-        setErrorMassage("Please Agree To our terms and conditions");
-        return;
+    if (!terms) {
+      setErrorMassage("Please Agree To our terms and conditions");
+      return;
     }
-
 
     const regex =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -38,16 +43,24 @@ const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
-
-        // verification email section 
-        sendEmailVerification(auth.currentUser)
+        // update profile
+        const profile = {
+          displayName: name,
+          photoURL: image,
+        };
+        updateProfile(auth.currentUser, profile)
         .then(() => {
-          console.log("email verification sent");
-          setSuccessMessage(true);
+          console.log("user profile updated")
+        })
+        .catch(()=> {
+          console.log("user profile updated")
         })
 
-
-
+        // verification email section
+        sendEmailVerification(auth.currentUser).then(() => {
+          console.log("email verification sent");
+          setSuccessMessage(true);
+        });
       })
       .catch((error) => {
         console.log("Error", error);
@@ -60,6 +73,30 @@ const SignUp = () => {
     <div className="card p-12 my-8 mx-auto bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
       <h1 className="text-5xl text-center font-bold">Register now!</h1>
       <form onSubmit={handleSignUpForm} className="card-body">
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Name</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            className="input input-bordered"
+            required
+          />
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Photo URL</span>
+          </label>
+          <input
+            type="text"
+            name="photo"
+            placeholder="paste your photo url"
+            className="input input-bordered"
+            required
+          />
+        </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Email</span>
@@ -96,10 +133,11 @@ const SignUp = () => {
           </label>
           <div className="form-control mt-3">
             <label className="label cursor-pointer">
-            <input type="checkbox" name="checkBox" className="checkbox" />
+              <input type="checkbox" name="checkBox" className="checkbox" />
 
-              <span className="label-text">Please agree Terms and Conditions</span>
-              
+              <span className="label-text">
+                Please agree Terms and Conditions
+              </span>
             </label>
           </div>
         </div>
@@ -107,12 +145,17 @@ const SignUp = () => {
           <button className="btn btn-primary">Register</button>
         </div>
         <div>
-          All ready have account ? <Link to="/login" className="underline text-blue-600">Log in</Link>
+          All ready have account ?{" "}
+          <Link to="/login" className="underline text-blue-600">
+            Log in
+          </Link>
         </div>
       </form>
       {errorMassage && <p className="text-red-600"> {errorMassage}</p>}
       {successMessage && (
-        <p className="text-green-500">A verification message has been sent to your mail</p>
+        <p className="text-green-500">
+          A verification message has been sent to your mail
+        </p>
       )}
     </div>
   );

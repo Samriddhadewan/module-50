@@ -41,7 +41,7 @@ const Login = () => {
     if(!email){
       alert("please enter the email")
     }
-    else{
+    else{``
       sendPasswordResetEmail(auth, email)
       .then(()=> {
         alert("reset email pass has been sent to your inbox")
