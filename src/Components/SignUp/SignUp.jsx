@@ -3,6 +3,7 @@ import auth from "../../firebase.config";
 import { useState } from "react";
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [errorMassage, setErrorMassage] = useState("");
@@ -95,6 +96,9 @@ const SignUp = () => {
         </div>
         <div className="form-control mt-6">
           <button className="btn btn-primary">Login</button>
+        </div>
+        <div>
+          All ready have account ? <Link to="/login" className="underline text-blue-600">Log in</Link>
         </div>
       </form>
       {errorMassage && <p className="text-red-600"> {errorMassage}</p>}
