@@ -20,7 +20,8 @@ const SignUp = () => {
     setSuccessMessage(false);
 
     if(!terms){
-        setErrorMassage("Please Agree To our terms and conditions")
+        setErrorMassage("Please Agree To our terms and conditions");
+        return;
     }
 
 
@@ -47,7 +48,7 @@ const SignUp = () => {
 
   return (
     <div className="card p-12 my-8 mx-auto bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-      <h1 className="text-5xl text-center font-bold">Login now!</h1>
+      <h1 className="text-5xl text-center font-bold">Register now!</h1>
       <form onSubmit={handleSignUpForm} className="card-body">
         <div className="form-control">
           <label className="label">
