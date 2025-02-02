@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import auth from "../../firebase.config";
 import { useState } from "react";
 
@@ -38,7 +38,16 @@ const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
-        setSuccessMessage(true);
+
+        // verification email section 
+        sendEmailVerification(auth.currentUser)
+        .then(() => {
+          console.log("email verification sent");
+          setSuccessMessage(true);
+        })
+
+
+
       })
       .catch((error) => {
         console.log("Error", error);
@@ -95,7 +104,7 @@ const SignUp = () => {
           </div>
         </div>
         <div className="form-control mt-6">
-          <button className="btn btn-primary">Login</button>
+          <button className="btn btn-primary">Register</button>
         </div>
         <div>
           All ready have account ? <Link to="/login" className="underline text-blue-600">Log in</Link>
@@ -103,7 +112,7 @@ const SignUp = () => {
       </form>
       {errorMassage && <p className="text-red-600"> {errorMassage}</p>}
       {successMessage && (
-        <p className="text-green-500">Account sign in successful!</p>
+        <p className="text-green-500">A verification message has been sent to your mail</p>
       )}
     </div>
   );

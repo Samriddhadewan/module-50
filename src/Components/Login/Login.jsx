@@ -1,11 +1,12 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase.config";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState(false)
   const [success, setSuccess] = useState(false)
+  const emailRef = useRef()
 
 
 
@@ -20,13 +21,31 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
     .then(result => {
       console.log(result.user);
-      setSuccess(true);
+      if(!result.user.emailVerified){
+        setErrorMessage(true)
+      }
+      else{
+        setSuccess(true);
+      }
     })
     .catch(error => {
       console.log("Error", error.message);
       setErrorMessage(error.message);
     })
-  
+  }
+
+  const handleForgetPass = () => {
+
+    const email = emailRef.current.value;
+    
+    sendPasswordResetEmail(auth, email)
+    .then(()=> {
+      alert("reset email pass has been sent to your inbox")
+    })
+    .catch((error)=> {
+      console.log('ERROR',error)
+    })
+    
   }
 
   return (
@@ -45,7 +64,7 @@ const Login = () => {
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" name="email" placeholder="email" className="input input-bordered" required />
+          <input type="email" ref={emailRef} name="email" placeholder="email" className="input input-bordered" required />
         </div>
         <div className="form-control">
           <label className="label">
@@ -53,7 +72,7 @@ const Login = () => {
           </label>
           <input type="password" name="password" placeholder="password" className="input input-bordered" required />
           <label className="label">
-            <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+            <a href="#" onClick={handleForgetPass} className="label-text-alt link link-hover">Forgot password?</a>
           </label>
         </div>
         <div className="form-control mt-6">
