@@ -51,7 +51,7 @@ const Register = () => {
         </label>
         <button className="btn btn-accent btn-wide"> Sign Up</button>
       </form>
-    </div>
+    </div>  
   );
 };
 
