@@ -4,21 +4,34 @@ import { useState } from "react";
 
 const SignUp = () => {
     const [errorMassage, setErrorMassage] = useState("")
+    const [successMessage, setSuccessMessage] = useState(false)
     
     const handleSignUpForm = (e) =>{
         e.preventDefault();
         const email = e.target.email.value;
-        const pass = e.target.password.value;
+        const password = e.target.password.value;
 
         setErrorMassage("");
+        setSuccessMessage(false);
 
-        createUserWithEmailAndPassword(auth, email, pass)
+        const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if(!regex.test(password)){
+            setErrorMassage("password should contain at least 1number, 1uppercase letter, 1 lowercase letter, 1 special character");
+            return;
+        }
+  
+
+        createUserWithEmailAndPassword(auth, email, password)
         .then(result => {
-            console.log(result.user)
+            console.log(result.user);
+            setSuccessMessage(true);
+
         })
         .catch(error => {
             console.log("Error", error);
-            setErrorMassage(error.message)
+            setErrorMassage(error.message);
+            setSuccessMessage(false)
         })
 
 
@@ -51,6 +64,9 @@ const SignUp = () => {
       </form>
       {
         errorMassage && <p className="text-red-600"> {errorMassage}</p>
+      }
+      {
+        successMessage && <p className="text-green-500">Account sign in successful!</p>
       }
     </div>
   )
