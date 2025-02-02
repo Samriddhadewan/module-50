@@ -37,14 +37,20 @@ const Login = () => {
   const handleForgetPass = () => {
 
     const email = emailRef.current.value;
+
+    if(!email){
+      alert("please enter the email")
+    }
+    else{
+      sendPasswordResetEmail(auth, email)
+      .then(()=> {
+        alert("reset email pass has been sent to your inbox")
+      })
+      .catch((error)=> {
+        console.log('ERROR',error)
+      })
+    }
     
-    sendPasswordResetEmail(auth, email)
-    .then(()=> {
-      alert("reset email pass has been sent to your inbox")
-    })
-    .catch((error)=> {
-      console.log('ERROR',error)
-    })
     
   }
 
